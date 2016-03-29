@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="table_type">
+        <item>物料表</item>
+        <item>客户表</item>
+        <item>库存表</item>
+        <item>公司表</item>
+    </string-array>
+    <string-array name="load_type">
+        <item>全部覆盖</item>
+        <item>追加</item>
+    </string-array>
+</resources>
