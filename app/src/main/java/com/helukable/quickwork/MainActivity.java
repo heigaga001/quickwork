@@ -1,5 +1,6 @@
 package com.helukable.quickwork;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 
 import com.helukable.quickwork.base.BaseActivity;
 import com.helukable.quickwork.ui.LoadXLSFragment;
+import com.helukable.quickwork.ui.QuotationDetailsActivity;
 import com.helukable.quickwork.ui.QuotationFragment;
 import com.helukable.quickwork.ui.VariableFragment;
 
@@ -95,7 +97,7 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_gallery) {
             commitFragment(new VariableFragment());
         } else if (id == R.id.nav_slideshow) {
-
+            startActivity(new Intent(this, QuotationDetailsActivity.class));
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

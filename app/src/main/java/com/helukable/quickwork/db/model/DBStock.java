@@ -5,8 +5,10 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 import com.helukable.quickwork.db.DBContract;
+import com.helukable.quickwork.db.SelectionBuilder;
 
 /**
  * Created by zouyong on 2016/3/28.
@@ -75,6 +77,20 @@ public class DBStock extends DBModel {
     @Override
     public void notifyChange(Context context, Uri uri, int code) {
         notifyUri(context, uri, false);
+    }
+
+    @Override
+    public SelectionBuilder buildSelection(Uri uri, int code) {
+        SelectionBuilder builder = new SelectionBuilder();
+        switch (code) {
+            case STOCK:
+                return builder.table(getTable(code));
+            case STOCK_ID:
+                return builder.table(getTable(code)).where(BaseColumns._ID + "=?",
+                        String.valueOf(ContentUris.parseId(uri)));
+            default:
+                throw new UnsupportedOperationException("Unknown uri code: " + code);
+        }
     }
 
     public void insertStock(Context context, int id, int stock) {

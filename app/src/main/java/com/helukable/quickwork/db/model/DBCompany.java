@@ -5,9 +5,11 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 import com.helukable.quickwork.base.BaseActivity;
 import com.helukable.quickwork.db.DBContract;
+import com.helukable.quickwork.db.SelectionBuilder;
 import com.helukable.quickwork.modle.Company;
 
 /**
@@ -89,6 +91,20 @@ public class DBCompany extends DBModel{
                 return ContentUris.withAppendedId(CONTENT_URI, id);
             default:
                 return null;
+        }
+    }
+
+    @Override
+    public SelectionBuilder buildSelection(Uri uri, int code) {
+        SelectionBuilder builder = new SelectionBuilder();
+        switch (code) {
+            case COMPANY:
+                return builder.table(getTable(code));
+            case COMPANY_ID:
+                return builder.table(getTable(code)).where(BaseColumns._ID + "=?",
+                        String.valueOf(ContentUris.parseId(uri)));
+            default:
+                throw new UnsupportedOperationException("Unknown uri code: " + code);
         }
     }
 

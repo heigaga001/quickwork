@@ -33,6 +33,7 @@ public class Materiel {
     private float freightSer;
     private float freightSky;
     private int lanpuId;
+    private String lappType;
 
     public int getId() {
         return id;
@@ -48,6 +49,14 @@ public class Materiel {
 
     public void setLanpuId(int lanpuId) {
         this.lanpuId = lanpuId;
+    }
+
+    public String getLappType() {
+        return lappType;
+    }
+
+    public void setLappType(String lappType) {
+        this.lappType = lappType;
     }
 
     public float getFreightSer() {
@@ -240,6 +249,7 @@ public class Materiel {
         materiel.setAlBasis(Helper.getCellFloat(sheet, row, 18));
         materiel.setMessingBrass(Helper.getCellString(sheet, row, 19));
         materiel.setLanpuId(Helper.getCellInt(sheet, row, 20));
+        materiel.setLappType(Helper.getCellString(sheet, row, 21));
         return materiel;
     }
 

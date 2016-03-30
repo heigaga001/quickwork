@@ -1,5 +1,7 @@
 package com.helukable.quickwork.modle;
 
+import android.text.TextUtils;
+
 import com.helukable.quickwork.util.Helper;
 
 import jxl.Sheet;
@@ -8,6 +10,7 @@ import jxl.Sheet;
  * Created by zouyong on 2016/3/28.
  */
 public class Customer {
+    private String id;
     private String name;
     private Company company;
     private String job;
@@ -15,6 +18,14 @@ public class Customer {
     private String phone2;
     private String mobile_phone;
     private String fax;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -80,13 +91,19 @@ public class Customer {
         Company company = new Company();
         company.setId(id);
         Customer customer = new Customer();
+
         customer.setCompany(company);
-        customer.setName(Helper.getCellString(sheet,row,2));
-        customer.setJob(Helper.getCellString(sheet,row,3));
-        customer.setPhone1(Helper.getCellString(sheet,row,4));
-        customer.setPhone2(Helper.getCellString(sheet,row,5));
-        customer.setMobile_phone(Helper.getCellString(sheet,row,6));
-        customer.setFax(Helper.getCellString(sheet,row,7));
+        String customerId = Helper.getCellString(sheet,row,2);
+        if(TextUtils.isEmpty(customerId)){
+            return null;
+        }
+        customer.setId(customerId);
+        customer.setName(Helper.getCellString(sheet,row,3));
+        customer.setJob(Helper.getCellString(sheet,row,4));
+        customer.setPhone1(Helper.getCellString(sheet,row,5));
+        customer.setPhone2(Helper.getCellString(sheet,row,6));
+        customer.setMobile_phone(Helper.getCellString(sheet,row,7));
+        customer.setFax(Helper.getCellString(sheet,row,8));
         return customer;
     }
 

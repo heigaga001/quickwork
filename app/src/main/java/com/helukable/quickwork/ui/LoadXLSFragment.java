@@ -225,12 +225,17 @@ public class LoadXLSFragment extends BaseFragment implements AdapterView.OnItemS
                     break;
             }
 
+            int lastprocess = 0;
             for (int i = loadStart; i < rows; i++) {
                 if(i==loadStart){
                     publishProgress(0);
-                }else if((i-loadStart)*100%(rows-loadStart)==0){
-                    System.out.println("===i:"+i+",loadstart:"+loadStart+",rows:"+rows);
-                    publishProgress((i-loadStart)*100/(rows-loadStart));
+                }else{
+                    int process = (i-loadStart)*100/(rows-loadStart);
+                    if(process!=lastprocess){
+                        lastprocess = process;
+                        publishProgress(lastprocess);
+                    }
+
                 }
                 switch (tabletype) {
                     case 0:

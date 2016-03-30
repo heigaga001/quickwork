@@ -53,6 +53,7 @@ public class DBMateriel extends DBModel{
         String AL_BASIS = "Al_Basis";
         String MESSING_BRASS = "Messing_Brass";
         String LANPUID = "lanpuid";
+        String LANPUTYPE = "lanputype";
 
     }
 
@@ -65,6 +66,7 @@ public class DBMateriel extends DBModel{
         String sql = "CREATE TABLE " + getTable() + " ("
                 + Columns.ID +" INTEGER PRIMARY KEY, "
                 + Columns.LANPUID +" INTEGER, "
+                + Columns.LANPUTYPE +" TEXT, "
                 + Columns.TYPE +" TEXT, "
                 + Columns.SIZE +" TEXT, "
                 + Columns.TGR +" TEXT, "
@@ -151,6 +153,7 @@ public class DBMateriel extends DBModel{
         values.put(Columns.AL_BASIS,materiel.getAlBasis());
         values.put(Columns.MESSING_BRASS,materiel.getMessingBrass());
         values.put(Columns.LANPUID,materiel.getLanpuId());
+        values.put(Columns.LANPUTYPE,materiel.getLappType());
         resolver.insert(getUri(MATERIEL,0),values);
     }
     public void deleteData(Context context) {

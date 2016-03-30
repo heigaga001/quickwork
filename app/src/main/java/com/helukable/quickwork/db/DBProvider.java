@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.CancellationSignal;
+import android.support.annotation.Nullable;
 
 public class DBProvider extends ContentProvider {
 
@@ -24,7 +26,6 @@ public class DBProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        System.out.println("=====onCreate DBProvider");
     	openDatabase(getContext());
     	return true;
     }

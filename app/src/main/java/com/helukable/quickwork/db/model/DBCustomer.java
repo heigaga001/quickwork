@@ -5,8 +5,10 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 import com.helukable.quickwork.db.DBContract;
+import com.helukable.quickwork.db.SelectionBuilder;
 import com.helukable.quickwork.modle.Customer;
 
 /**
@@ -36,7 +38,7 @@ public class DBCustomer extends DBModel{
 
     public interface Columns {
         String ID = "_id";
-        String NAME = "name";
+        String NAME = "cname";
         String COMPANYID = "companyid";
         String JOB = "job";
         String PHONE1 = "phone1";
@@ -51,7 +53,7 @@ public class DBCustomer extends DBModel{
     @Override
     public String getCreateTableSql() {
         String sql = "CREATE TABLE " + getTable() + " ("
-                + Columns.ID + " INTEGER PRIMARY KEY, "
+                + Columns.ID + " TEXT UNIQUE, "
                 + Columns.NAME +" TEXT,"
                 + Columns.COMPANYID +" INTEGER,"
                 + Columns.JOB +" TEXT,"
@@ -64,7 +66,16 @@ public class DBCustomer extends DBModel{
 
     @Override
     public String getTable(int code) {
-        return TABLE_NAME;
+        switch (code) {
+            case CUSTOMER:
+            case CUSTOMER_ID:
+                return TABLE_NAME;
+            case CUSTOMER_COMPANY_ID:
+                return getJoinTable(TABLE_NAME, Columns.COMPANYID, DBCompany.getTable(),
+                        DBCompany.Columns.ID);
+            default:
+                return TABLE_NAME;
+        }
     }
 
     public static String getColumn(String colum) {
@@ -111,6 +122,22 @@ public class DBCustomer extends DBModel{
     }
 
     @Override
+    public SelectionBuilder buildSelection(Uri uri, int code) {
+        SelectionBuilder builder = new SelectionBuilder();
+        switch (code) {
+            case CUSTOMER:
+                return builder.table(getTable(code));
+            case CUSTOMER_ID:
+                return builder.table(getTable(code)).where(BaseColumns._ID + "=?",
+                        String.valueOf(ContentUris.parseId(uri)));
+            case CUSTOMER_COMPANY_ID:
+                return builder.table(getTable(code));
+            default:
+                throw new UnsupportedOperationException("Unknown uri code: " + code);
+        }
+    }
+
+    @Override
     public void notifyChange(Context context, Uri uri, int code) {
         notifyUri(context, uri, false);
         if(code == CUSTOMER_COMPANY_ID){
@@ -124,6 +151,7 @@ public class DBCustomer extends DBModel{
         }
         ContentResolver resolver = context.getContentResolver();
         ContentValues values = new ContentValues();
+        values.put(Columns.ID,customer.getId());
         values.put(Columns.COMPANYID, customer.getCompany().getId());
         values.put(Columns.NAME,customer.getName());
         values.put(Columns.JOB,customer.getJob());

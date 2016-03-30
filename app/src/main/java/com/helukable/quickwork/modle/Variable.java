@@ -22,12 +22,17 @@ public class Variable {
 
     public static Variable getInstance(Context context){
         if(instance == null){
-            instance = new Variable(context);
+            instance = new Variable();
+            instance.init(context);
         }
         return instance;
     }
 
-    private Variable(Context context){
+    public Variable(){
+
+    }
+
+    private void init(Context context){
         delCuValue = ShareUtil.read(context,SDELCUVALUE,429.00f);
         niValue = ShareUtil.read(context,SNIVALUE,1655.99f);
         aluValue = ShareUtil.read(context,SALUVALUE,250.00f);

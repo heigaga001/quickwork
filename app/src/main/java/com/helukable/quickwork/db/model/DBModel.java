@@ -15,7 +15,7 @@ public abstract class DBModel {
     protected static final String CODE_ID = "#";
     protected static final String CODE_COMPANY = "company";
     protected static final String CODE_STORK = "stock";
-//    protected static final String CODE_AVATAR_GROUP = "avatar_group";
+    protected static final String CODE_CUSTORM_COMPANY = "custormer_company";
     
     public abstract String getCreateTableSql();
     
@@ -42,7 +42,5 @@ public abstract class DBModel {
         return c;
     }
 
-    public SelectionBuilder buildSelection(Uri uri, int code) {
-        return null;
-    }
+    public abstract SelectionBuilder buildSelection(Uri uri, int code);
 }
