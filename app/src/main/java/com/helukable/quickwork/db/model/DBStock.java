@@ -55,7 +55,7 @@ public class DBStock extends DBModel {
     public String getCreateTableSql() {
         String sql = "CREATE TABLE " + getTable() + " ("
                 + Columns.ID + " INTEGER PRIMARY KEY, "
-                + Columns.STOCKIMPORT + " INTEGER "
+                + Columns.STOCKIMPORT + " INTEGER, "
                 + Columns.STOCK + " INTEGER)";
         return sql;
     }
