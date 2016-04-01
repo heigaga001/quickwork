@@ -6,11 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.helukable.quickwork.db.model.DBCustomer;
 import com.helukable.quickwork.db.model.DBQuotationDetails;
+import com.helukable.quickwork.db.model.DBStock;
 
 
 public class DBHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 	
 	public DBHelper(Context context) {
 		super(context,"quickwork.db", null, DATABASE_VERSION);
@@ -41,6 +42,20 @@ public class DBHelper extends SQLiteOpenHelper {
 					}
 					break;
 				}
+            case 2:
+                if(newVersion ==3){
+                    db.beginTransaction();
+                    try{
+                        db.execSQL("ALTER TABLE " + DBStock.getTable() + " ADD COLUMN " + DBStock.Columns.STOCKIMPORT + " INTEGER DEFAULT 0");
+                        db.setTransactionSuccessful();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally {
+                        db.endTransaction();
+                    }
+                    break;
+                }
+
 			default:
 				dropAll(db);
 				onCreate(db);

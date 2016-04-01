@@ -38,12 +38,13 @@ public class DBStock extends DBModel {
     }
 
     public static String[] getColumns() {
-        return new String[]{getTable()+"."+Columns.STOCK};
+        return new String[]{getColumn(Columns.STOCK),getColumn(Columns.STOCKIMPORT)};
     }
 
     public interface Columns {
         String ID = "_id";
         String STOCK = "stock";
+        String STOCKIMPORT = "stockimport";
     }
 
     public static String getTable() {
@@ -54,6 +55,7 @@ public class DBStock extends DBModel {
     public String getCreateTableSql() {
         String sql = "CREATE TABLE " + getTable() + " ("
                 + Columns.ID + " INTEGER PRIMARY KEY, "
+                + Columns.STOCKIMPORT + " INTEGER "
                 + Columns.STOCK + " INTEGER)";
         return sql;
     }
@@ -101,7 +103,7 @@ public class DBStock extends DBModel {
         }
     }
 
-    public void insertStock(Context context, int id, int stock) {
+    public void insertStock(Context context, int id, int stock,int stockimport) {
         if (id == 0) {
             return;
         }
@@ -112,6 +114,7 @@ public class DBStock extends DBModel {
         ContentValues values = new ContentValues();
         values.put(Columns.ID, id);
         values.put(Columns.STOCK, stock);
+        values.put(Columns.STOCKIMPORT,stockimport);
         resolver.insert(getUri(STOCK, 0), values);
     }
 

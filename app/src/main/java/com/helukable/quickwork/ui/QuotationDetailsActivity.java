@@ -6,9 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -45,12 +50,25 @@ import com.helukable.quickwork.db.model.DBQuotationDetails;
 import com.helukable.quickwork.modle.Materiel;
 import com.helukable.quickwork.modle.Quotation;
 import com.helukable.quickwork.modle.Variable;
+import com.helukable.quickwork.util.BuildFileUtil;
 import com.helukable.quickwork.util.Helper;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.zip.Inflater;
+
+import jxl.Cell;
+import jxl.Range;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import jxl.read.biff.PasswordException;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 /**
  * Created by zouyong on 2016/3/29.
@@ -120,9 +138,11 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
                 String phone = cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.PHONE1)));
                 String mobilepgone = cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.MOBILE_PHONE)));
                 String faxStr = cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.FAX)));
+                String email = cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.EMAIL)));
                 phone1.setText("电话\n"+phone);
                 telephone.setText("手机\n"+mobilepgone);
                 fax.setText("传真\n"+faxStr);
+                mQuotation.setEmail(email);
 
             }
         });
@@ -187,31 +207,45 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
             case R.id.action_send_sea:
             case R.id.action_send_sky:
             case R.id.action_send_all:
-                StringBuffer body = new StringBuffer();
-                body.append(Const.head1);
+                String filePath = Environment.getExternalStorageDirectory() + "/quickwork/报价.xls";
+                File file = new File(filePath);
                 Cursor cursor = mQuotationDetailAdapter.getCursor();
+                String [][] data = null;
+                if(item.getItemId() == R.id.action_send_all){
+                    data = new String[cursor.getCount()+1][];
+                    data[0] = new String[]{"订货号","品名","规格","数量(M)","海运单价(元/米)","空运单价(元/米)"};
+                }else{
+                    data = new String[cursor.getCount()+1][5];
+                    data[0] = new String[]{"订货号","品名","规格","数量(M)","单价(元/米)"};
+                }
                 for(int i=0;i<cursor.getCount();i++){
                     cursor.moveToPosition(i);
                     Materiel materiel = Materiel.createByCursor(cursor);
                     materiel.initPrice(mQuotation.getCoefficient(),mQuotation);
                     if(item.getItemId()==R.id.action_send_sea){
-                        body.append(String.format(Const.body1,""+materiel.getId(),""+materiel.getType(),""+materiel.getSize(),""+materiel.getNum(),""+materiel.getFreightSer()));
+                        data[i+1]=new String[]{""+materiel.getId(),""+materiel.getType(),""+materiel.getSize(),""+materiel.getNum(),""+materiel.getFreightSer()};
                     }else if(item.getItemId()==R.id.action_send_sky){
-                        body.append(String.format(Const.body1,""+materiel.getId(),""+materiel.getType(),""+materiel.getSize(),""+materiel.getNum(),""+materiel.getFreightSer()));
+                        data[i+1]= new String[]{""+materiel.getId(),""+materiel.getType(),""+materiel.getSize(),""+materiel.getNum(),""+materiel.getFreightSky()};
                     }else{
-
+                        data[i+1]=new String[]{""+materiel.getId(),""+materiel.getType(),""+materiel.getSize(),""+materiel.getNum(),""+materiel.getFreightSer(),""+materiel.getFreightSky()};
                     }
                 }
-                body.append(Const.end);
                 try{
-
-                    Intent data=new Intent(Intent.ACTION_SENDTO);
-                    data.setData(Uri.parse("mailto:"));
-                    data.setType("text/html");
-                    data.putExtra(Intent.EXTRA_SUBJECT, "报价 - 来自和柔电缆");
-                    data.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(body.toString()));
+                    boolean create = BuildFileUtil.createXLSFile(file,data);
+                    if(!create){
+                        showToast("生成文件失败");
+                        return true;
+                    }
+                    Intent intent=new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setData(Uri.parse("mailto:"+mQuotation.getEmail()));
+                    intent.setType("text/html");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "报价 - 来自和柔电缆");
+                    intent.putExtra(Intent.EXTRA_TEXT, "你好");
+                    ArrayList<Uri> uris = new ArrayList<Uri>();
+                    uris.add(Uri.parse("file://"+filePath));
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
 //                    Html.fromHtml()
-                    startActivity(data);
+                    startActivity(intent);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -347,7 +381,7 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
             holder.type.setText(materiel.getType()+"\n"+materiel.getSize());
             holder.price.setText(""+materiel.getFreightSer());
             holder.priceSky.setText(""+materiel.getFreightSky());
-            holder.stock.setText("("+materiel.getStock()+")");
+            holder.stock.setText("("+materiel.getStock()+"/"+materiel.getStockImport()+")");
             holder.num.setText(""+materiel.getNum());
             holder.num.setTag(cursor.getPosition());
             holder.id.setTag(cursor.getPosition());

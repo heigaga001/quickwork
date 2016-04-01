@@ -43,6 +43,8 @@ public class Quotation implements Parcelable {
 
     String telephone;
 
+    String email;
+
     protected Quotation(Parcel in) {
         id = in.readInt();
         custormerID = in.readString();
@@ -59,6 +61,7 @@ public class Quotation implements Parcelable {
         phone2 = in.readString();
         telephone = in.readString();
         fax = in.readString();
+        email = in.readString();
     }
 
     public Quotation(){
@@ -99,6 +102,7 @@ public class Quotation implements Parcelable {
         dest.writeString(phone2);
         dest.writeString(telephone);
         dest.writeString(fax);
+        dest.writeString(email);
 
     }
 
@@ -222,6 +226,14 @@ public class Quotation implements Parcelable {
         this.telephone = telephone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public static Quotation createFromCursor(Cursor cursor){
         Quotation quotation = new Quotation();
         quotation.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.ID))));
@@ -240,6 +252,7 @@ public class Quotation implements Parcelable {
         quotation.setPhone2(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.PHONE2))));
         quotation.setTelephone(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.MOBILE_PHONE))));
         quotation.setFax(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.FAX))));
+        quotation.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.EMAIL))));
         return quotation;
     }
 }

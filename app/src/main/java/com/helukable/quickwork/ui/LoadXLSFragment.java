@@ -247,7 +247,7 @@ public class LoadXLSFragment extends BaseFragment implements AdapterView.OnItemS
                         DBCustomer.getInstance().insertCustomer(getBaseActivity(),customer);
                         break;
                     case 2:
-                        DBStock.getInstance().insertStock(getBaseActivity(),Helper.getCellInt(sheet,i,0),Helper.getCellInt(sheet,i,2));
+                        DBStock.getInstance().insertStock(getBaseActivity(),Helper.getCellInt(sheet,i,0),Helper.getCellInt(sheet,i,2),Helper.getCellInt(sheet,i,3));
                         break;
                     case 3:
                         Company company = Company.createBySheet(sheet,i);

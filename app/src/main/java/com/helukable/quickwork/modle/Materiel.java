@@ -39,6 +39,7 @@ public class Materiel {
     private int lanpuId;
     private String lappType;
     private int stock;
+    private int stockImport;
     private int num;
 
     public int getId() {
@@ -233,6 +234,14 @@ public class Materiel {
         this.num = num;
     }
 
+    public int getStockImport() {
+        return stockImport;
+    }
+
+    public void setStockImport(int stockImport) {
+        this.stockImport = stockImport;
+    }
+
     public Materiel initPrice(float coefficient, Quotation variable) {
         float p = (variable.getDelCuValue() - copperBasis) * copperWeight / 1000 +
                 (variable.getNiValue() - niBasis) * niWeight / 1000 +
@@ -297,6 +306,7 @@ public class Materiel {
             materiel.setAlWeight(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.AL_WEIGHT))));
             materiel.setAlBasis(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.AL_BASIS))));
             materiel.setStock(cursor.getInt(cursor.getColumnIndexOrThrow(DBStock.getColumn(DBStock.Columns.STOCK))));
+            materiel.setStockImport(cursor.getInt(cursor.getColumnIndexOrThrow(DBStock.getColumn(DBStock.Columns.STOCKIMPORT))));
             materiel.setNum(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotationDetails.getColumn(DBQuotationDetails.Columns.NUM))));
         }
         return materiel;

@@ -95,13 +95,13 @@ public class DBCustomer extends DBModel{
                 String[] colums = new String[] { getColumn(Columns.ID), getColumn(Columns.NAME),getColumn(Columns.COMPANYID),
                         getColumn(Columns.JOB), getColumn(Columns.PHONE1),
                         getColumn(Columns.PHONE2), getColumn(Columns.MOBILE_PHONE),
-                        getColumn(Columns.FAX) };
+                        getColumn(Columns.FAX),getColumn(Columns.EMAIL) };
                 return concat(colums, DBCompany.getColumns());
             case QUOTATION_CUSTOMER_ID:
                 return new String[]{getColumn(Columns.NAME),
                         getColumn(Columns.JOB), getColumn(Columns.PHONE1),
                         getColumn(Columns.PHONE2), getColumn(Columns.MOBILE_PHONE),
-                        getColumn(Columns.FAX)};
+                        getColumn(Columns.FAX),getColumn(Columns.EMAIL)};
             default:
                 return null;
         }
@@ -168,6 +168,7 @@ public class DBCustomer extends DBModel{
         values.put(Columns.PHONE2,customer.getPhone2());
         values.put(Columns.MOBILE_PHONE,customer.getMobile_phone());
         values.put(Columns.FAX,customer.getFax());
+        values.put(Columns.EMAIL,customer.getEmail());
         resolver.insert(getUri(CUSTOMER, 0), values);
     }
     public void deleteData(Context context) {

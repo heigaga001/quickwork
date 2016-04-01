@@ -18,6 +18,7 @@ public class Customer {
     private String phone2;
     private String mobile_phone;
     private String fax;
+    private String email;
 
     public String getId() {
         return id;
@@ -83,6 +84,14 @@ public class Customer {
         this.fax = fax;
     }
 
+    public String getEmail() {
+        return email==null?"":email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public static Customer createBySheet(Sheet sheet, int row){
         int id = Helper.getCellInt(sheet, row, 1);
         if (id == 0) {
@@ -104,6 +113,7 @@ public class Customer {
         customer.setPhone2(Helper.getCellString(sheet,row,6));
         customer.setMobile_phone(Helper.getCellString(sheet,row,7));
         customer.setFax(Helper.getCellString(sheet,row,8));
+        customer.setEmail(Helper.getCellString(sheet,row,9));
         return customer;
     }
 
