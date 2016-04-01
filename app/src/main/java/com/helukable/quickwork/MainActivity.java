@@ -35,15 +35,6 @@ public class MainActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
             this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -52,6 +43,9 @@ public class MainActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_camera);
+        commitFragment(new QuotationFragment());
+        setTitle("报价单列表");
     }
 
     @Override
@@ -67,7 +61,7 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+//        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -94,14 +88,17 @@ public class MainActivity extends BaseActivity
 
         if (id == R.id.nav_camera) {
             commitFragment(new QuotationFragment());
+            setTitle("报价单列表");
         } else if (id == R.id.nav_gallery) {
             commitFragment(new VariableFragment());
+            setTitle("修改金属单价");
         } else if (id == R.id.nav_slideshow) {
-            startActivity(new Intent(this, QuotationDetailsActivity.class));
+
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
             commitFragment(new LoadXLSFragment());
+            setTitle("加载数据");
         } else if (id == R.id.nav_send) {
 
         }

@@ -1,16 +1,22 @@
 package com.helukable.quickwork.db.model;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.BaseColumns;
+import android.provider.Settings;
 
 import com.helukable.quickwork.db.DBContract;
 import com.helukable.quickwork.db.SelectionBuilder;
+import com.helukable.quickwork.modle.Quotation;
 
 /**
  * Created by zouyong on 2016/3/29.
  */
-public class DBQuotation extends DBModel{
+public class DBQuotation extends DBModel {
 
     public static final int QUOTATION = 1;
 
@@ -52,32 +58,58 @@ public class DBQuotation extends DBModel{
     @Override
     public String getCreateTableSql() {
         String sql = "CREATE TABLE " + getTable() + " ("
-                + Columns.ID +" INTEGER PRIMARY KEY, "
-                + Columns.COEFFICIENT +" FLOAT, "
-                + Columns.COMPANYID +" INTEGER, "
-                + Columns.DELCUVALUE +" FLOAT, "
-                + Columns.NIVALUE +" FLOAT, "
-                + Columns.ALUVALUE +" FLOAT, "
-                + Columns.MESSINGBRASSFIX +" FLOAT, "
-                + Columns.COPPERMK +" FLOAT, "
-                + Columns.CUSTOMERID +" TEXT, "
-                + Columns.CREATEAT +" TEXT);"
-                ;
+                + Columns.ID + " INTEGER PRIMARY KEY, "
+                + Columns.COEFFICIENT + " FLOAT, "
+                + Columns.COMPANYID + " INTEGER, "
+                + Columns.DELCUVALUE + " FLOAT, "
+                + Columns.NIVALUE + " FLOAT, "
+                + Columns.ALUVALUE + " FLOAT, "
+                + Columns.MESSINGBRASSFIX + " FLOAT, "
+                + Columns.COPPERMK + " FLOAT, "
+                + Columns.CUSTOMERID + " TEXT, "
+                + Columns.CREATEAT + " TEXT);";
         return sql;
+    }
+
+    public static String getColumn(String colum) {
+        return getTable() + "." + colum;
+    }
+
+    public static String[] getColumns(int code) {
+        switch (code) {
+            case QUOTATION:
+            case QUOTATION_ID:
+                return new String[]{"*"};
+            case QUOTATION_CUSTOMER_ID:
+                String[] colums = new String[]{getColumn(Columns.ID), getColumn(Columns.ALUVALUE), getColumn(Columns.COMPANYID),
+                        getColumn(Columns.CUSTOMERID), getColumn(Columns.COEFFICIENT), getColumn(Columns.COPPERMK),
+                        getColumn(Columns.CREATEAT), getColumn(Columns.DELCUVALUE), getColumn(Columns.MESSINGBRASSFIX),
+                        getColumn(Columns.NIVALUE)};
+                return concat(concat(colums, DBCustomer.getColumns(DBCustomer.QUOTATION_CUSTOMER_ID)), DBCompany.getColumns());
+            default:
+                return null;
+        }
     }
 
     @Override
     public String getTable(int code) {
-        return TABLE_NAME;
+        switch (code) {
+            case QUOTATION:
+            case QUOTATION_ID:
+                return TABLE_NAME;
+            case QUOTATION_CUSTOMER_ID:
+                return getJoinTable(TABLE_NAME, Columns.CUSTOMERID, Columns.COMPANYID, DBCustomer.getTable(), DBCustomer.Columns.ID, DBCompany.getTable(), DBCompany.Columns.ID);
+        }
+        return null;
     }
 
     @Override
     public DBContract.PathInfo[] getPathInfo() {
-        return new DBContract.PathInfo[] {
+        return new DBContract.PathInfo[]{
                 new DBContract.PathInfo(TABLE_NAME, QUOTATION),
                 new DBContract.PathInfo(TABLE_NAME + "/" + CODE_ID, QUOTATION_ID),
-                new DBContract.PathInfo(TABLE_NAME + "/" + CODE_COMPANY,
-                        QUOTATION_CUSTOMER_ID) };
+                new DBContract.PathInfo(TABLE_NAME + "/" + CODE_CUSTORM_COMPANY,
+                        QUOTATION_CUSTOMER_ID)};
     }
 
     @Override
@@ -97,17 +129,49 @@ public class DBQuotation extends DBModel{
     @Override
     public void notifyChange(Context context, Uri uri, int code) {
         notifyUri(context, uri, false);
-        if(code == QUOTATION_CUSTOMER_ID){
-            notifyUri(context,getUri(QUOTATION,0),false);
+        if (code == QUOTATION_CUSTOMER_ID) {
+            notifyUri(context, getUri(QUOTATION, 0), false);
         }
     }
 
     @Override
     public SelectionBuilder buildSelection(Uri uri, int code) {
-        return null;
+        SelectionBuilder builder = new SelectionBuilder();
+        switch (code) {
+            case QUOTATION:
+                return builder.table(getTable(code));
+            case QUOTATION_ID:
+                return builder.table(getTable(code)).where(BaseColumns._ID + "=?",
+                        String.valueOf(ContentUris.parseId(uri)));
+            case QUOTATION_CUSTOMER_ID:
+                return builder.table(getTable(code));
+            default:
+                throw new UnsupportedOperationException("Unknown uri code: " + code);
+        }
     }
 
-    public void insert(){
+    public void insert(Context context, Quotation qutation) {
+        ContentResolver resolver = context.getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(Columns.ALUVALUE, qutation.getAluValue());
+        values.put(Columns.COEFFICIENT, qutation.getCoefficient());
+        values.put(Columns.COMPANYID, qutation.getCompanyId());
+        values.put(Columns.COPPERMK, qutation.getCopperMk());
+        values.put(Columns.CUSTOMERID, qutation.getCustormerID());
+        values.put(Columns.DELCUVALUE, qutation.getDelCuValue());
+        values.put(Columns.MESSINGBRASSFIX, qutation.getMessingBrassfix());
+        values.put(Columns.NIVALUE, qutation.getNiValue());
+        values.put(Columns.CREATEAT, qutation.getCreateAt() == null ? "" + System.currentTimeMillis() : qutation.getCreateAt());
+        if (qutation.getId() != 0) {
+            resolver.update(getUri(QUOTATION, 0), values, Columns.ID + " = ? ", new String[]{String.valueOf(qutation.getId())});
+            return;
+        }
+        Uri uri = resolver.insert(getUri(QUOTATION_ID, 0), values);
+        if (uri != null) {
+            int id = (int) ContentUris.parseId(uri);
+            qutation.setId(id);
+        }
 
     }
 }
+

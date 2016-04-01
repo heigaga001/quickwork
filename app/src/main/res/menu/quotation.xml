@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_save"
+        android:title="@string/action_save"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_add"
+        android:title="@string/action_add"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_send_sea"
+        android:title="发送海运"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_send_sky"
+        android:title="发送空运"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_send_all"
+        android:title="发送全部"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>

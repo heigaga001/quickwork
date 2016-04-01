@@ -4,6 +4,9 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.TypedValue;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import jxl.Sheet;
 
 /**
@@ -55,4 +58,17 @@ public class Helper {
         }
         return value;
     }
+
+    public static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static String getData(String time){
+        try{
+            long t = Long.parseLong(time);
+            return format.format(new Date(t));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 }

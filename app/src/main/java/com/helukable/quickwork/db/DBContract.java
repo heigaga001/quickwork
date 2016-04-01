@@ -7,6 +7,8 @@ import com.helukable.quickwork.db.model.DBCompany;
 import com.helukable.quickwork.db.model.DBCustomer;
 import com.helukable.quickwork.db.model.DBMateriel;
 import com.helukable.quickwork.db.model.DBModel;
+import com.helukable.quickwork.db.model.DBQuotation;
+import com.helukable.quickwork.db.model.DBQuotationDetails;
 import com.helukable.quickwork.db.model.DBStock;
 
 
@@ -16,7 +18,9 @@ public class DBContract {
             DBMateriel.getInstance(),
             DBStock.getInstance(),
             DBCompany.getInstance(),
-            DBCustomer.getInstance()
+            DBCustomer.getInstance(),
+            DBQuotation.getInstance(),
+            DBQuotationDetails.getInstance()
     };
     
     private static UriMatcher sUriMatcher = buildMatcher();

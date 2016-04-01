@@ -4,10 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.helukable.quickwork.db.model.DBCustomer;
+import com.helukable.quickwork.db.model.DBQuotationDetails;
+
 
 public class DBHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	public DBHelper(Context context) {
 		super(context,"quickwork.db", null, DATABASE_VERSION);
@@ -23,8 +26,26 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        dropAll(db);
-        onCreate(db);
+		switch (oldVersion){
+			case 1:
+				if(newVersion ==2){
+					db.beginTransaction();
+					try{
+						db.execSQL("ALTER TABLE " + DBQuotationDetails.getTable() + " ADD COLUMN " + DBQuotationDetails.Columns.NUM + " INTEGER DEFAULT 100");
+                        db.execSQL("ALTER TABLE " + DBCustomer.getTable() + " ADD COLUMN " + DBCustomer.Columns.EMAIL + " TEXT");
+					    db.setTransactionSuccessful();
+                    }catch (Exception e){
+                        e.printStackTrace();
+					}finally {
+						db.endTransaction();
+					}
+					break;
+				}
+			default:
+				dropAll(db);
+				onCreate(db);
+				break;
+		}
 	}
 
     private void dropAll(SQLiteDatabase db) {

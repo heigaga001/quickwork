@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 /**
  * Created by zouyong on 2016/3/24.
@@ -33,5 +34,13 @@ public class BaseActivity extends AppCompatActivity{
         if (progress != null && progress.isShowing()) {
             progress.dismiss();
         }
+    }
+    Toast toast;
+    public void showToast(String msg){
+        if(toast == null){
+            toast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
+        }
+        toast.setText(msg);
+        toast.show();
     }
 }

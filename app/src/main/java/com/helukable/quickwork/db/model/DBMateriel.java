@@ -34,6 +34,16 @@ public class DBMateriel extends DBModel{
         return instance;
     }
 
+    public static String getColumn(String colum) {
+        return getTable() + "." + colum;
+    }
+
+    public static String[] getColumns() {
+        return new String[]{getColumn(Columns.TYPE),getColumn(Columns.SIZE),getColumn(Columns.TGR),getColumn(Columns.PRICE),getColumn(Columns.PER),
+                getColumn(Columns.UNIT),getColumn(Columns.WEIGHT),getColumn(Columns.COPPER_WEIGHT),getColumn(Columns.COPPER_BASIS),getColumn(Columns.COPPER_MK_WEIGHT),
+                getColumn(Columns.COPPER_MK_BASIS),getColumn(Columns.NI_WEIGHT),getColumn(Columns.NI_BASIS),getColumn(Columns.AL_WEIGHT),getColumn(Columns.AL_BASIS),getColumn(Columns.MESSING_BRASS)};
+    }
+
     public interface Columns {
         String ID = "_id";
         String TYPE = "type";

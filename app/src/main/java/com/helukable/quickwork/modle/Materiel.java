@@ -1,7 +1,11 @@
 package com.helukable.quickwork.modle;
 
+import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.helukable.quickwork.db.model.DBMateriel;
+import com.helukable.quickwork.db.model.DBQuotationDetails;
+import com.helukable.quickwork.db.model.DBStock;
 import com.helukable.quickwork.util.Helper;
 
 import java.math.BigDecimal;
@@ -34,6 +38,8 @@ public class Materiel {
     private float freightSky;
     private int lanpuId;
     private String lappType;
+    private int stock;
+    private int num;
 
     public int getId() {
         return id;
@@ -211,7 +217,23 @@ public class Materiel {
         this.messingBrass = messingBrass;
     }
 
-    public Materiel initPrice(float coefficient,Variable variable) {
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public Materiel initPrice(float coefficient, Quotation variable) {
         float p = (variable.getDelCuValue() - copperBasis) * copperWeight / 1000 +
                 (variable.getNiValue() - niBasis) * niWeight / 1000 +
                 (variable.getAluValue() - alBasis) * alWeight / 1000 +
@@ -250,6 +272,33 @@ public class Materiel {
         materiel.setMessingBrass(Helper.getCellString(sheet, row, 19));
         materiel.setLanpuId(Helper.getCellInt(sheet, row, 20));
         materiel.setLappType(Helper.getCellString(sheet, row, 21));
+        return materiel;
+    }
+
+    public static Materiel createByCursor(Cursor cursor){
+        Materiel materiel = null;
+        if(cursor!=null){
+            materiel = new Materiel();
+            materiel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotationDetails.getColumn(DBQuotationDetails.Columns.MATERIELID))));
+            materiel.setPer(cursor.getInt(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.PER))));
+            materiel.setType(cursor.getString(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.TYPE))));
+            materiel.setSize(cursor.getString(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.SIZE))));
+            materiel.setTgr(cursor.getString(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.TGR))));
+            materiel.setUnit(cursor.getString(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.UNIT))));
+            materiel.setMessingBrass(cursor.getString(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.MESSING_BRASS))));
+            materiel.setPrice(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.PRICE))));
+            materiel.setWeight(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.WEIGHT))));
+            materiel.setCopperWeight(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.COPPER_WEIGHT))));
+            materiel.setCopperBasis(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.COPPER_BASIS))));
+            materiel.setCopperMkWeight(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.COPPER_MK_WEIGHT))));
+            materiel.setCopperMkBasis(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.COPPER_MK_BASIS))));
+            materiel.setNiWeight(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.NI_WEIGHT))));
+            materiel.setNiBasis(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.NI_BASIS))));
+            materiel.setAlWeight(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.AL_WEIGHT))));
+            materiel.setAlBasis(cursor.getFloat(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.AL_BASIS))));
+            materiel.setStock(cursor.getInt(cursor.getColumnIndexOrThrow(DBStock.getColumn(DBStock.Columns.STOCK))));
+            materiel.setNum(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotationDetails.getColumn(DBQuotationDetails.Columns.NUM))));
+        }
         return materiel;
     }
 

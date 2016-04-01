@@ -22,6 +22,8 @@ public class DBCustomer extends DBModel{
 
     public static final int CUSTOMER_COMPANY_ID = 3;
 
+    public static final int QUOTATION_CUSTOMER_ID = 4;
+
     private static final String TABLE_NAME = "customer";
 
     public static final Uri CONTENT_URI = Uri.withAppendedPath(
@@ -44,6 +46,7 @@ public class DBCustomer extends DBModel{
         String PHONE1 = "phone1";
         String PHONE2 = "phone2";
         String MOBILE_PHONE = "mobilephone";
+        String EMAIL = "email";
         String FAX = "fax";
     }
 
@@ -60,6 +63,7 @@ public class DBCustomer extends DBModel{
                 + Columns.PHONE1 +" TEXT,"
                 + Columns.PHONE2 +" TEXT,"
                 + Columns.MOBILE_PHONE +" TEXT,"
+                + Columns.EMAIL +" TEXT,"
                 + Columns.FAX + " TEXT)";
         return sql;
     }
@@ -88,11 +92,16 @@ public class DBCustomer extends DBModel{
             case CUSTOMER_ID:
                 return new String[] { "*" };
             case CUSTOMER_COMPANY_ID:
-                String[] colums = new String[] { getColumn(Columns.ID), getColumn(Columns.NAME),
+                String[] colums = new String[] { getColumn(Columns.ID), getColumn(Columns.NAME),getColumn(Columns.COMPANYID),
                         getColumn(Columns.JOB), getColumn(Columns.PHONE1),
                         getColumn(Columns.PHONE2), getColumn(Columns.MOBILE_PHONE),
                         getColumn(Columns.FAX) };
                 return concat(colums, DBCompany.getColumns());
+            case QUOTATION_CUSTOMER_ID:
+                return new String[]{getColumn(Columns.NAME),
+                        getColumn(Columns.JOB), getColumn(Columns.PHONE1),
+                        getColumn(Columns.PHONE2), getColumn(Columns.MOBILE_PHONE),
+                        getColumn(Columns.FAX)};
             default:
                 return null;
         }

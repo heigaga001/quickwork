@@ -10,4 +10,8 @@
         <item>全部覆盖</item>
         <item>追加</item>
     </string-array>
+    <string-array name="materiel_type">
+        <item>和柔</item>
+        <item>缆普</item>
+    </string-array>
 </resources>

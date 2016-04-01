@@ -33,6 +33,14 @@ public class DBStock extends DBModel {
         return instance;
     }
 
+    public static String getColumn(String colum) {
+        return getTable() + "." + colum;
+    }
+
+    public static String[] getColumns() {
+        return new String[]{getTable()+"."+Columns.STOCK};
+    }
+
     public interface Columns {
         String ID = "_id";
         String STOCK = "stock";

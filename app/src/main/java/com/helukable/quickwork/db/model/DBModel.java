@@ -34,6 +34,14 @@ public abstract class DBModel {
     protected String getJoinTable(String table1, String table1Colums, String table2, String table2Colums) {
         return String.format("%s left join %s on %s.%s = %s.%s", table1, table2, table1, table1Colums, table2, table2Colums);
     }
+
+    protected String getJoinTable(String table1, String table1Colums, String table2, String table2Colums,String table3,String table3Colums) {
+        return String.format("%s left join %s on %s.%s = %s.%s left join %s on %s.%s = %s.%s ", table1, table2, table1, table1Colums, table2, table2Colums,table3,table1,table1Colums,table3,table3Colums);
+    }
+
+    protected String getJoinTable(String table1, String table1Colums1, String table1Colums2,String table2, String table2Colums,String table3,String table3Colums) {
+        return String.format("%s left join %s on %s.%s = %s.%s left join %s on %s.%s = %s.%s ", table1, table2, table1, table1Colums1, table2, table2Colums,table3,table1,table1Colums2,table3,table3Colums);
+    }
     
     protected static String[] concat(String[] a, String[] b) {
         String[] c= new String[a.length+b.length];

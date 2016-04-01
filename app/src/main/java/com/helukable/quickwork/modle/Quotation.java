@@ -1,7 +1,12 @@
 package com.helukable.quickwork.modle;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.helukable.quickwork.db.model.DBCompany;
+import com.helukable.quickwork.db.model.DBCustomer;
+import com.helukable.quickwork.db.model.DBQuotation;
 
 /**
  * Created by zouyong on 2016/3/30.
@@ -26,7 +31,17 @@ public class Quotation implements Parcelable {
 
     float coefficient;
 
+    String name;
+
     String createAt;
+
+    String phone1;
+
+    String phone2;
+
+    String fax;
+
+    String telephone;
 
     protected Quotation(Parcel in) {
         id = in.readInt();
@@ -39,6 +54,11 @@ public class Quotation implements Parcelable {
         copperMk = in.readFloat();
         coefficient = in.readFloat();
         createAt = in.readString();
+        name = in.readString();
+        phone1 = in.readString();
+        phone2 = in.readString();
+        telephone = in.readString();
+        fax = in.readString();
     }
 
     public Quotation(){
@@ -74,6 +94,12 @@ public class Quotation implements Parcelable {
         dest.writeFloat(copperMk);
         dest.writeFloat(coefficient);
         dest.writeString(createAt);
+        dest.writeString(name);
+        dest.writeString(phone1);
+        dest.writeString(phone2);
+        dest.writeString(telephone);
+        dest.writeString(fax);
+
     }
 
     public int getId() {
@@ -154,5 +180,66 @@ public class Quotation implements Parcelable {
 
     public void setCreateAt(String createAt) {
         this.createAt = createAt;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone1() {
+        return phone1;
+    }
+
+    public void setPhone1(String phone1) {
+        this.phone1 = phone1;
+    }
+
+    public String getPhone2() {
+        return phone2;
+    }
+
+    public void setPhone2(String phone2) {
+        this.phone2 = phone2;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public static Quotation createFromCursor(Cursor cursor){
+        Quotation quotation = new Quotation();
+        quotation.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.ID))));
+        quotation.setCompanyId(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.COMPANYID))));
+        quotation.setNiValue(cursor.getFloat(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.NIVALUE))));
+        quotation.setDelCuValue(cursor.getFloat(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.DELCUVALUE))));
+        quotation.setAluValue(cursor.getFloat(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.ALUVALUE))));
+        quotation.setMessingBrassfix(cursor.getFloat(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.MESSINGBRASSFIX))));
+        quotation.setCopperMk(cursor.getFloat(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.COPPERMK))));
+        quotation.setCoefficient(cursor.getFloat(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.COEFFICIENT))));
+        quotation.setCreateAt(cursor.getString(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.CREATEAT))));
+        quotation.setCustormerID(cursor.getString(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.CUSTOMERID))));
+        quotation.setName(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.NAME)))+"("+
+                cursor.getString(cursor.getColumnIndexOrThrow(DBCompany.getColumn(DBCompany.Columns.NAME)))+")");
+        quotation.setPhone1(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.PHONE1))));
+        quotation.setPhone2(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.PHONE2))));
+        quotation.setTelephone(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.MOBILE_PHONE))));
+        quotation.setFax(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.FAX))));
+        return quotation;
     }
 }
