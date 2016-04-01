@@ -1,6 +1,11 @@
 package com.helukable.quickwork.util;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import jxl.Workbook;
@@ -113,5 +118,16 @@ public class BuildFileUtil {
             System.out.println("表头单元格样式设置失败！");
         }
         return headerFormat;
+    }
+
+    public static void createImageFile(File file,String [][] data){
+        Bitmap bitmap = Bitmap.createBitmap(100,200, Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+
+        }
     }
 }
