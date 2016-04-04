@@ -41,6 +41,7 @@ public class Materiel {
     private int stock;
     private int stockImport;
     private int num;
+    private int startPage;
 
     public int getId() {
         return id;
@@ -242,6 +243,14 @@ public class Materiel {
         this.stockImport = stockImport;
     }
 
+    public int getStartPage() {
+        return startPage;
+    }
+
+    public void setStartPage(int startPage) {
+        this.startPage = startPage;
+    }
+
     public Materiel initPrice(float coefficient, Quotation variable) {
         float p = (variable.getDelCuValue() - copperBasis) * copperWeight / 1000 +
                 (variable.getNiValue() - niBasis) * niWeight / 1000 +
@@ -281,6 +290,7 @@ public class Materiel {
         materiel.setMessingBrass(Helper.getCellString(sheet, row, 19));
         materiel.setLanpuId(Helper.getCellInt(sheet, row, 20));
         materiel.setLappType(Helper.getCellString(sheet, row, 21));
+        materiel.setStartPage(Helper.getCellInt(sheet,row,22));
         return materiel;
     }
 
@@ -308,6 +318,7 @@ public class Materiel {
             materiel.setStock(cursor.getInt(cursor.getColumnIndexOrThrow(DBStock.getColumn(DBStock.Columns.STOCK))));
             materiel.setStockImport(cursor.getInt(cursor.getColumnIndexOrThrow(DBStock.getColumn(DBStock.Columns.STOCKIMPORT))));
             materiel.setNum(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotationDetails.getColumn(DBQuotationDetails.Columns.NUM))));
+            materiel.setStartPage(cursor.getInt(cursor.getColumnIndexOrThrow(DBMateriel.getColumn(DBMateriel.Columns.STARTPAGE))));
         }
         return materiel;
     }

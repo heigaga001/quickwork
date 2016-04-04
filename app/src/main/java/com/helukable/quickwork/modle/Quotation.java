@@ -33,6 +33,8 @@ public class Quotation implements Parcelable {
 
     String name;
 
+    String companyName;
+
     String createAt;
 
     String phone1;
@@ -44,6 +46,10 @@ public class Quotation implements Parcelable {
     String telephone;
 
     String email;
+
+    String tip;
+
+    int type;
 
     protected Quotation(Parcel in) {
         id = in.readInt();
@@ -62,6 +68,9 @@ public class Quotation implements Parcelable {
         telephone = in.readString();
         fax = in.readString();
         email = in.readString();
+        companyName = in.readString();
+        tip = in.readString();
+        type = in.readInt();
     }
 
     public Quotation(){
@@ -103,7 +112,9 @@ public class Quotation implements Parcelable {
         dest.writeString(telephone);
         dest.writeString(fax);
         dest.writeString(email);
-
+        dest.writeString(companyName);
+        dest.writeString(tip);
+        dest.writeInt(type);
     }
 
     public int getId() {
@@ -234,6 +245,30 @@ public class Quotation implements Parcelable {
         this.email = email;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public static Quotation createFromCursor(Cursor cursor){
         Quotation quotation = new Quotation();
         quotation.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.ID))));
@@ -248,11 +283,14 @@ public class Quotation implements Parcelable {
         quotation.setCustormerID(cursor.getString(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.CUSTOMERID))));
         quotation.setName(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.NAME)))+"("+
                 cursor.getString(cursor.getColumnIndexOrThrow(DBCompany.getColumn(DBCompany.Columns.NAME)))+")");
+        quotation.setCompanyName(cursor.getString(cursor.getColumnIndexOrThrow(DBCompany.getColumn(DBCompany.Columns.NAME))));
         quotation.setPhone1(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.PHONE1))));
         quotation.setPhone2(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.PHONE2))));
         quotation.setTelephone(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.MOBILE_PHONE))));
         quotation.setFax(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.FAX))));
         quotation.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.EMAIL))));
+        quotation.setTip(cursor.getString(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.TIP))));
+        quotation.setType(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.TYPE))));
         return quotation;
     }
 }

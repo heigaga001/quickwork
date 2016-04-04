@@ -2,7 +2,10 @@ package com.helukable.quickwork.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -123,9 +126,13 @@ public class BuildFileUtil {
     public static void createImageFile(File file,String [][] data){
         Bitmap bitmap = Bitmap.createBitmap(100,200, Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.RED);
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
+
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
         } catch (FileNotFoundException e) {
 
         }

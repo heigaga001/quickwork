@@ -97,6 +97,12 @@
                 android:paddingRight="10dp"
                 android:text="16.0"
                 />
+            <Spinner
+                android:id="@+id/quotation_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
@@ -163,7 +169,15 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
         android:cacheColorHint="@android:color/transparent"
+        />
+    <EditText
+        android:id="@+id/quotation_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:hint="备注"
         />
 </LinearLayout>

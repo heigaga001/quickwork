@@ -41,7 +41,7 @@ public class DBMateriel extends DBModel{
     public static String[] getColumns() {
         return new String[]{getColumn(Columns.TYPE),getColumn(Columns.SIZE),getColumn(Columns.TGR),getColumn(Columns.PRICE),getColumn(Columns.PER),
                 getColumn(Columns.UNIT),getColumn(Columns.WEIGHT),getColumn(Columns.COPPER_WEIGHT),getColumn(Columns.COPPER_BASIS),getColumn(Columns.COPPER_MK_WEIGHT),
-                getColumn(Columns.COPPER_MK_BASIS),getColumn(Columns.NI_WEIGHT),getColumn(Columns.NI_BASIS),getColumn(Columns.AL_WEIGHT),getColumn(Columns.AL_BASIS),getColumn(Columns.MESSING_BRASS)};
+                getColumn(Columns.COPPER_MK_BASIS),getColumn(Columns.NI_WEIGHT),getColumn(Columns.NI_BASIS),getColumn(Columns.AL_WEIGHT),getColumn(Columns.AL_BASIS),getColumn(Columns.MESSING_BRASS),getColumn(Columns.STARTPAGE)};
     }
 
     public interface Columns {
@@ -64,6 +64,7 @@ public class DBMateriel extends DBModel{
         String MESSING_BRASS = "Messing_Brass";
         String LANPUID = "lanpuid";
         String LANPUTYPE = "lanputype";
+        String STARTPAGE = "startpage";
 
     }
 
@@ -92,6 +93,7 @@ public class DBMateriel extends DBModel{
                 + Columns.NI_BASIS +" FLOAT, "
                 + Columns.AL_WEIGHT +" FLOAT, "
                 + Columns.AL_BASIS +" FLOAT, "
+                + Columns.STARTPAGE +" INTEGER, "
                 + Columns.MESSING_BRASS +" TEXT);"
                 ;
         return sql;
@@ -164,6 +166,7 @@ public class DBMateriel extends DBModel{
         values.put(Columns.MESSING_BRASS,materiel.getMessingBrass());
         values.put(Columns.LANPUID,materiel.getLanpuId());
         values.put(Columns.LANPUTYPE,materiel.getLappType());
+        values.put(Columns.STARTPAGE,materiel.getStartPage());
         resolver.insert(getUri(MATERIEL,0),values);
     }
     public void deleteData(Context context) {

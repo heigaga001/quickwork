@@ -2,6 +2,8 @@ package com.helukable.quickwork.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -79,8 +81,9 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
     CustomerAdapter mCustomerAdapter;
     QuotationDetailAdapter mQuotationDetailAdapter;
     Quotation mQuotation;
-    EditText saleEt;
+    EditText saleEt,tip;
     TextView phone1,telephone,fax;
+    Spinner type;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +92,29 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
         phone1 = (TextView)findViewById(R.id.phone1);
         telephone = (TextView)findViewById(R.id.telephone);
         fax = (TextView)findViewById(R.id.fax);
+        tip = (EditText)findViewById(R.id.quotation_tip);
+        type = (Spinner)findViewById(R.id.quotation_type);
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, getResources().getTextArray(R.array.quotation_type)) {
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView text = (TextView) super.getView(position, convertView, parent);
+                text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                int padding = Helper.dp2px(QuotationDetailsActivity.this, 10);
+                text.setPadding(padding, padding, 0, padding);
+                return text;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView text = (TextView) super.getView(position, convertView, parent);
+                text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                int padding = Helper.dp2px(QuotationDetailsActivity.this, 10);
+                text.setPadding(padding, padding, 0, padding);
+                return text;
+            }
+        };
+        type.setAdapter(adapter);
         if(mQuotation == null){
             mQuotation = new Quotation();
             mQuotation.setCoefficient(16f);
@@ -99,6 +125,7 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
             mQuotation.setMessingBrassfix(variable.getMessingBrassfix());
             mQuotation.setNiValue(variable.getNiValue());
             mQuotation.setCreateAt(""+System.currentTimeMillis());
+            mQuotation.setType(0);
         }
         company = (AutoCompleteTextView) findViewById(R.id.auto_company);
         if(mQuotation.getId()>0){
@@ -112,7 +139,8 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
         }else{
             setTitle("新增报价单");
         }
-
+        type.setSelection(mQuotation.getType());
+        tip.setText(mQuotation.getTip()==null?"":mQuotation.getTip());
 
         mCustomerAdapter = new CustomerAdapter(this);
         mQuotationDetailAdapter = new QuotationDetailAdapter(this);
@@ -143,7 +171,7 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
                 telephone.setText("手机\n"+mobilepgone);
                 fax.setText("传真\n"+faxStr);
                 mQuotation.setEmail(email);
-
+                mQuotation.setCompanyName(cursor.getString(cursor.getColumnIndexOrThrow(DBCompany.getColumn(DBCompany.Columns.NAME))));
             }
         });
         TextView text = (TextView)findViewById(R.id.cu_value);
@@ -207,7 +235,8 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
             case R.id.action_send_sea:
             case R.id.action_send_sky:
             case R.id.action_send_all:
-                String filePath = Environment.getExternalStorageDirectory() + "/quickwork/报价.xls";
+                String filePath = Environment.getExternalStorageDirectory() + "/quickwork/%s和柔报价-%s.xls";
+                filePath = String.format(filePath,Helper.getTodayData(),mQuotation.getCompanyName());
                 File file = new File(filePath);
                 Cursor cursor = mQuotationDetailAdapter.getCursor();
                 String [][] data = null;
@@ -237,10 +266,12 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
                         return true;
                     }
                     Intent intent=new Intent(Intent.ACTION_SEND_MULTIPLE);
-                    intent.setData(Uri.parse("mailto:"+mQuotation.getEmail()));
+                    String[] tos = { mQuotation.getEmail() };
+                    intent.putExtra(Intent.EXTRA_EMAIL,tos);
+//                    intent.setData(Uri.parse("mailto:"+mQuotation.getEmail()));
                     intent.setType("text/html");
                     intent.putExtra(Intent.EXTRA_SUBJECT, "报价 - 来自和柔电缆");
-                    intent.putExtra(Intent.EXTRA_TEXT, "你好");
+                    intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml("<div>您好！<br/><br/>感谢询价，报价详见附件。<br/><br/>此价格含税含运费，货期X周。<br/><br/>谢谢！</div>"));
                     ArrayList<Uri> uris = new ArrayList<Uri>();
                     uris.add(Uri.parse("file://"+filePath));
                     intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
@@ -263,6 +294,8 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
         if(mQuotation.getId()==0){
             needLoad = true;
         }
+        mQuotation.setType(type.getSelectedItemPosition());
+        mQuotation.setTip(tip.getText().toString());
         DBQuotation.getInstance().insert(this,mQuotation);
         if(needLoad){
             initLoader();
@@ -385,8 +418,10 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
             holder.num.setText(""+materiel.getNum());
             holder.num.setTag(cursor.getPosition());
             holder.id.setTag(cursor.getPosition());
+            holder.type.setTag(cursor.getPosition());
+            holder.price.setTag(cursor.getPosition());
         }
-        class Holder implements View.OnFocusChangeListener{
+        class Holder implements View.OnFocusChangeListener,View.OnClickListener{
             EditText id;
             TextView type;
             TextView price;
@@ -403,6 +438,8 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
                 num = (EditText)view.findViewById(R.id.num);
                 num.setOnFocusChangeListener(this);
                 id.setOnFocusChangeListener(this);
+                type.setOnClickListener(this);
+                price.setOnClickListener(this);
                 view.setTag(this);
             }
 
@@ -454,6 +491,23 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
                     }
                 }
 
+            }
+
+            @Override
+            public void onClick(View v) {
+                int pos = (Integer)v.getTag();
+                Cursor cursor = (Cursor) getItem(pos);
+                if(v == type){
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotationDetails.getColumn(DBQuotationDetails.Columns.MATERIELID)));
+                    Intent intent = new Intent(QuotationDetailsActivity.this,CheckStockActivity.class);
+                    intent.putExtra(CheckStockActivity.EXTRA_ID,id);
+                    startActivity(intent);
+                }else if(v == price){
+                    int startPage = cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotationDetails.getColumn(DBMateriel.Columns.STARTPAGE)));
+                    ClipboardManager myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                    myClipboard.setPrimaryClip(ClipData.newPlainText("text", String.valueOf(startPage)));
+                    showToast("复制成功："+startPage);
+                }
             }
         }
     }

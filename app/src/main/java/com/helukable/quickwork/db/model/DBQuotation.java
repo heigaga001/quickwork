@@ -52,6 +52,8 @@ public class DBQuotation extends DBModel {
         String COPPERMK = "copperMk";
         String CUSTOMERID = "customer";
         String COMPANYID = "company";
+        String TIP = "tip";
+        String TYPE = "type";
         String CREATEAT = "createAt";
     }
 
@@ -67,6 +69,8 @@ public class DBQuotation extends DBModel {
                 + Columns.MESSINGBRASSFIX + " FLOAT, "
                 + Columns.COPPERMK + " FLOAT, "
                 + Columns.CUSTOMERID + " TEXT, "
+                + Columns.TIP + " TEXT, "
+                + Columns.TYPE + " INTEGER, "
                 + Columns.CREATEAT + " TEXT);";
         return sql;
     }
@@ -84,7 +88,7 @@ public class DBQuotation extends DBModel {
                 String[] colums = new String[]{getColumn(Columns.ID), getColumn(Columns.ALUVALUE), getColumn(Columns.COMPANYID),
                         getColumn(Columns.CUSTOMERID), getColumn(Columns.COEFFICIENT), getColumn(Columns.COPPERMK),
                         getColumn(Columns.CREATEAT), getColumn(Columns.DELCUVALUE), getColumn(Columns.MESSINGBRASSFIX),
-                        getColumn(Columns.NIVALUE)};
+                        getColumn(Columns.NIVALUE), getColumn(Columns.TYPE), getColumn(Columns.TIP)};
                 return concat(concat(colums, DBCustomer.getColumns(DBCustomer.QUOTATION_CUSTOMER_ID)), DBCompany.getColumns());
             default:
                 return null;
@@ -161,6 +165,8 @@ public class DBQuotation extends DBModel {
         values.put(Columns.DELCUVALUE, qutation.getDelCuValue());
         values.put(Columns.MESSINGBRASSFIX, qutation.getMessingBrassfix());
         values.put(Columns.NIVALUE, qutation.getNiValue());
+        values.put(Columns.TIP, qutation.getTip());
+        values.put(Columns.TYPE, qutation.getType());
         values.put(Columns.CREATEAT, qutation.getCreateAt() == null ? "" + System.currentTimeMillis() : qutation.getCreateAt());
         if (qutation.getId() != 0) {
             resolver.update(getUri(QUOTATION, 0), values, Columns.ID + " = ? ", new String[]{String.valueOf(qutation.getId())});

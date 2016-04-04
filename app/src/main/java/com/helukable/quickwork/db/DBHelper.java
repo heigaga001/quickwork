@@ -5,13 +5,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.helukable.quickwork.db.model.DBCustomer;
+import com.helukable.quickwork.db.model.DBMateriel;
+import com.helukable.quickwork.db.model.DBQuotation;
 import com.helukable.quickwork.db.model.DBQuotationDetails;
 import com.helukable.quickwork.db.model.DBStock;
 
 
 public class DBHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 5;
 	
 	public DBHelper(Context context) {
 		super(context,"quickwork.db", null, DATABASE_VERSION);
@@ -55,7 +57,33 @@ public class DBHelper extends SQLiteOpenHelper {
                     }
                     break;
                 }
-
+			case 3:
+				if(newVersion ==4){
+					db.beginTransaction();
+					try{
+						db.execSQL("ALTER TABLE " + DBMateriel.getTable() + " ADD COLUMN " + DBMateriel.Columns.STARTPAGE + " INTEGER DEFAULT 0");
+						db.setTransactionSuccessful();
+					}catch (Exception e){
+						e.printStackTrace();
+					}finally {
+						db.endTransaction();
+					}
+					break;
+				}
+			case 4:
+				if(newVersion ==5){
+					db.beginTransaction();
+					try{
+						db.execSQL("ALTER TABLE " + DBQuotation.getTable() + " ADD COLUMN " + DBQuotation.Columns.TYPE + " INTEGER DEFAULT 0");
+						db.execSQL("ALTER TABLE " + DBQuotation.getTable() + " ADD COLUMN " + DBQuotation.Columns.TIP + " TEXT");
+						db.setTransactionSuccessful();
+					}catch (Exception e){
+						e.printStackTrace();
+					}finally {
+						db.endTransaction();
+					}
+					break;
+				}
 			default:
 				dropAll(db);
 				onCreate(db);

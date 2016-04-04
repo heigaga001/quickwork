@@ -60,11 +60,21 @@ public class Helper {
     }
 
     public static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat format2 = new SimpleDateFormat("yyyyMMdd");
 
     public static String getData(String time){
         try{
             long t = Long.parseLong(time);
             return format.format(new Date(t));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getTodayData(){
+        try{
+            return format2.format(new Date(System.currentTimeMillis()));
         }catch (Exception e){
             e.printStackTrace();
         }

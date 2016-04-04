@@ -2,6 +2,7 @@ package com.helukable.quickwork;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,9 @@ import com.helukable.quickwork.ui.LoadXLSFragment;
 import com.helukable.quickwork.ui.QuotationDetailsActivity;
 import com.helukable.quickwork.ui.QuotationFragment;
 import com.helukable.quickwork.ui.VariableFragment;
+import com.helukable.quickwork.util.BuildFileUtil;
+
+import java.io.File;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +50,9 @@ public class MainActivity extends BaseActivity
         navigationView.setCheckedItem(R.id.nav_camera);
         commitFragment(new QuotationFragment());
         setTitle("报价单列表");
+//        String filePath = Environment.getExternalStorageDirectory() + "/quickwork/报价.png";
+//        File file = new File(filePath);
+//        BuildFileUtil.createImageFile(file,null);
     }
 
     @Override
