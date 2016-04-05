@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_add"
+        android:title="新增报价单"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_0"
+        android:title="意向询价"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_1"
+        android:title="报价跟踪"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_2"
+        android:title="已转合同"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_3"
+        android:title="报价流失"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>

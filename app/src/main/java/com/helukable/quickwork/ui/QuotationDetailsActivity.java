@@ -128,6 +128,29 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
             mQuotation.setType(0);
         }
         company = (AutoCompleteTextView) findViewById(R.id.auto_company);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.phone1:
+                        if(!TextUtils.isEmpty(mQuotation.getPhone1())){
+                            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mQuotation.getPhone1()));
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.telephone:
+                        if(!TextUtils.isEmpty(mQuotation.getTelephone())){
+                            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mQuotation.getTelephone()));
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.fax:
+                        break;
+                }
+            }
+        };
+        phone1.setOnClickListener(onClickListener);
+        telephone.setOnClickListener(onClickListener);
         if(mQuotation.getId()>0){
             company.setText(mQuotation.getName());
             company.setEnabled(false);
@@ -378,7 +401,7 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this,DBQuotationDetails.getInstance().getUri(DBQuotationDetails.QUOTATIONDETAIL_MATERIEL_STOCKS_ID,0),DBQuotationDetails.getColumns(DBQuotationDetails.QUOTATIONDETAIL_MATERIEL_STOCKS_ID),DBQuotationDetails.getColumn(DBQuotationDetails.Columns.QUOTATIONID)+" = ? ",new String[]{String.valueOf(id)},DBQuotationDetails.getColumn(DBQuotationDetails.Columns.MATERIELID));
+        return new CursorLoader(this,DBQuotationDetails.getInstance().getUri(DBQuotationDetails.QUOTATIONDETAIL_MATERIEL_STOCKS_ID,0),DBQuotationDetails.getColumns(DBQuotationDetails.QUOTATIONDETAIL_MATERIEL_STOCKS_ID),DBQuotationDetails.getColumn(DBQuotationDetails.Columns.QUOTATIONID)+" = ? ",new String[]{String.valueOf(id)},DBQuotationDetails.getColumn(DBQuotationDetails.Columns.ID));
     }
 
     @Override
@@ -503,10 +526,13 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
                     intent.putExtra(CheckStockActivity.EXTRA_ID,id);
                     startActivity(intent);
                 }else if(v == price){
+                    Intent intent = new Intent(QuotationDetailsActivity.this,PdfViewActivity.class);
                     int startPage = cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotationDetails.getColumn(DBMateriel.Columns.STARTPAGE)));
-                    ClipboardManager myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-                    myClipboard.setPrimaryClip(ClipData.newPlainText("text", String.valueOf(startPage)));
-                    showToast("复制成功："+startPage);
+//                    ClipboardManager myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+//                    myClipboard.setPrimaryClip(ClipData.newPlainText("text", String.valueOf(startPage)));
+//                    showToast("复制成功："+startPage);
+                    intent.putExtra(PdfViewActivity.EXTRA_INDEX,startPage);
+                    startActivity(intent);
                 }
             }
         }

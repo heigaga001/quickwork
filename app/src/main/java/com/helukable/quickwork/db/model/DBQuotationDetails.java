@@ -158,4 +158,7 @@ public class DBQuotationDetails extends DBModel{
     public void delete(Context context,int id){
         context.getContentResolver().delete(getUri(QUOTATIONDETAIL,0),Columns.ID+" = ? ",new String[]{String.valueOf(id)});
     }
+    public void deleteByQuotationId(Context context,int id){
+        context.getContentResolver().delete(getUri(QUOTATIONDETAIL,0),Columns.QUOTATIONID+" = ? ",new String[]{String.valueOf(id)});
+    }
 }

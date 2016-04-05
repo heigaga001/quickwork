@@ -133,7 +133,7 @@ public class DBQuotation extends DBModel {
     @Override
     public void notifyChange(Context context, Uri uri, int code) {
         notifyUri(context, uri, false);
-        if (code == QUOTATION_CUSTOMER_ID) {
+        if (code == QUOTATION_CUSTOMER_ID||code == QUOTATION_ID) {
             notifyUri(context, getUri(QUOTATION, 0), false);
         }
     }
@@ -178,6 +178,12 @@ public class DBQuotation extends DBModel {
             qutation.setId(id);
         }
 
+    }
+
+    public void deleteById(Context context,int id){
+        ContentResolver resolver = context.getContentResolver();
+        resolver.delete(getUri(QUOTATION, 0), Columns.ID + " = ? ",new String[]{String.valueOf(id)});
+        DBQuotationDetails.getInstance().deleteByQuotationId(context,id);
     }
 }
 

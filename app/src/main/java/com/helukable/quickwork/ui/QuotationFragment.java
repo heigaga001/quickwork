@@ -1,6 +1,8 @@
 package com.helukable.quickwork.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -35,6 +37,9 @@ public class QuotationFragment extends BaseFragment implements LoaderManager.Loa
     Variable mCoefficient;
     ListView list;
     QuotationAdapter adapter;
+    String [] types;
+    int selectType = 0;
+    String where = null;
     @Override
     protected int getLayoutId() {
         return R.layout.quotation_layout;
@@ -44,6 +49,7 @@ public class QuotationFragment extends BaseFragment implements LoaderManager.Loa
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        types = getContext().getResources().getStringArray(R.array.quotation_type);
         list = findViewById(R.id.listview);
         adapter = new QuotationAdapter(getBaseActivity());
         list.setAdapter(adapter);
@@ -57,25 +63,75 @@ public class QuotationFragment extends BaseFragment implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor)adapter.getItem(position);
+                int quotationId = cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.ID)));
+                showDeleteDialog(quotationId);
+                return false;
+            }
+        });
         getLoaderManager().initLoader(0,null,this);
+    }
+
+    public void showDeleteDialog(final int id){
+        new AlertDialog.Builder(getBaseActivity())
+                .setTitle("提示")
+                .setMessage("你确认删除此条报价吗？")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DBQuotation.getInstance().deleteById(getBaseActivity(),id);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add("新增报价单").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(getBaseActivity(), QuotationDetailsActivity.class));
-                return true;
-            }
-        });
+        inflater.inflate(R.menu.quotation_type,menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add:
+                startActivity(new Intent(getBaseActivity(), QuotationDetailsActivity.class));
+                break;
+            case R.id.action_0:
+                where = DBQuotation.getColumn(DBQuotation.Columns.TYPE) +" = ? ";
+                selectType = 0;
+                getLoaderManager().restartLoader(0,null,this);
+                break;
+            case R.id.action_1:
+                where = DBQuotation.getColumn(DBQuotation.Columns.TYPE) +" = ? ";
+                selectType = 1;
+                getLoaderManager().restartLoader(0,null,this);
+                break;
+            case R.id.action_2:
+                where = DBQuotation.getColumn(DBQuotation.Columns.TYPE) +" = ? ";
+                selectType = 2;
+                getLoaderManager().restartLoader(0,null,this);
+                break;
+            case R.id.action_3:
+                where = DBQuotation.getColumn(DBQuotation.Columns.TYPE) +" = ? ";
+                selectType = 3;
+                getLoaderManager().restartLoader(0,null,this);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getBaseActivity(), DBQuotation.getInstance().getUri(DBQuotation.QUOTATION_CUSTOMER_ID, 0), DBQuotation.getColumns(DBQuotation.QUOTATION_CUSTOMER_ID), null, null,  DBQuotation.getColumn(DBQuotation.Columns.CREATEAT)+" desc");
+        return new CursorLoader(getBaseActivity(), DBQuotation.getInstance().getUri(DBQuotation.QUOTATION_CUSTOMER_ID, 0), DBQuotation.getColumns(DBQuotation.QUOTATION_CUSTOMER_ID), where,where==null?null:new String[]{String.valueOf(selectType)},  DBQuotation.getColumn(DBQuotation.Columns.CREATEAT)+" desc");
     }
 
     @Override
@@ -113,6 +169,10 @@ public class QuotationFragment extends BaseFragment implements LoaderManager.Loa
             sb.append("\n");
             sb.append("系数：");
             sb.append(cursor.getFloat(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.COEFFICIENT))));
+            sb.append("\n");
+            sb.append("类型：");
+            int type= cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.TYPE)));
+            sb.append(types[type]);
             sb.append("\n");
             sb.append("公司：");
             sb.append(cursor.getString(cursor.getColumnIndexOrThrow(DBCompany.getColumn(DBCompany.Columns.NAME))));
