@@ -15,9 +15,9 @@
         <item>缆普</item>
     </string-array>
     <string-array name="quotation_type">
-        <item>意向报价</item>
+        <item>意向询价</item>
         <item>报价跟踪</item>
-        <item>签订合同</item>
-        <item>报价取消</item>
+        <item>已转合同</item>
+        <item>报价流失</item>
     </string-array>
 </resources>

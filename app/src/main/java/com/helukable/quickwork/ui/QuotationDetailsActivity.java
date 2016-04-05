@@ -100,8 +100,8 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
             public View getView(int position, View convertView, ViewGroup parent) {
                 TextView text = (TextView) super.getView(position, convertView, parent);
                 text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                int padding = Helper.dp2px(QuotationDetailsActivity.this, 10);
-                text.setPadding(padding, padding, 0, padding);
+                int padding = Helper.dp2px(QuotationDetailsActivity.this, 5);
+                text.setPadding(padding, 0, 0, padding);
                 return text;
             }
 
@@ -109,8 +109,8 @@ public class QuotationDetailsActivity extends BaseActivity implements LoaderMana
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 TextView text = (TextView) super.getView(position, convertView, parent);
                 text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                int padding = Helper.dp2px(QuotationDetailsActivity.this, 10);
-                text.setPadding(padding, padding, 0, padding);
+                int padding = Helper.dp2px(QuotationDetailsActivity.this, 5);
+                text.setPadding(padding, 0, 0, padding);
                 return text;
             }
         };
