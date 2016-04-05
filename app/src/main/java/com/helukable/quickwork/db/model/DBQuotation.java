@@ -54,6 +54,7 @@ public class DBQuotation extends DBModel {
         String COMPANYID = "company";
         String TIP = "tip";
         String TYPE = "type";
+        String INDEX = "istatues";
         String CREATEAT = "createAt";
     }
 
@@ -71,6 +72,7 @@ public class DBQuotation extends DBModel {
                 + Columns.CUSTOMERID + " TEXT, "
                 + Columns.TIP + " TEXT, "
                 + Columns.TYPE + " INTEGER, "
+                + Columns.INDEX + " INTEGER, "
                 + Columns.CREATEAT + " TEXT);";
         return sql;
     }
@@ -88,7 +90,7 @@ public class DBQuotation extends DBModel {
                 String[] colums = new String[]{getColumn(Columns.ID), getColumn(Columns.ALUVALUE), getColumn(Columns.COMPANYID),
                         getColumn(Columns.CUSTOMERID), getColumn(Columns.COEFFICIENT), getColumn(Columns.COPPERMK),
                         getColumn(Columns.CREATEAT), getColumn(Columns.DELCUVALUE), getColumn(Columns.MESSINGBRASSFIX),
-                        getColumn(Columns.NIVALUE), getColumn(Columns.TYPE), getColumn(Columns.TIP)};
+                        getColumn(Columns.NIVALUE), getColumn(Columns.TYPE), getColumn(Columns.TIP),getColumn(Columns.INDEX)};
                 return concat(concat(colums, DBCustomer.getColumns(DBCustomer.QUOTATION_CUSTOMER_ID)), DBCompany.getColumns());
             default:
                 return null;

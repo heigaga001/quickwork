@@ -13,7 +13,7 @@ import com.helukable.quickwork.db.model.DBStock;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	
 	public DBHelper(Context context) {
 		super(context,"quickwork.db", null, DATABASE_VERSION);
@@ -29,39 +29,14 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        System.out.println("===="+oldVersion+"::"+newVersion);
 		switch (oldVersion){
-			case 1:
-				if(newVersion ==2){
+			case 4:
+				if(newVersion ==5){
 					db.beginTransaction();
 					try{
-						db.execSQL("ALTER TABLE " + DBQuotationDetails.getTable() + " ADD COLUMN " + DBQuotationDetails.Columns.NUM + " INTEGER DEFAULT 100");
-                        db.execSQL("ALTER TABLE " + DBCustomer.getTable() + " ADD COLUMN " + DBCustomer.Columns.EMAIL + " TEXT");
-					    db.setTransactionSuccessful();
-                    }catch (Exception e){
-                        e.printStackTrace();
-					}finally {
-						db.endTransaction();
-					}
-					break;
-				}
-            case 2:
-                if(newVersion ==3){
-                    db.beginTransaction();
-                    try{
-                        db.execSQL("ALTER TABLE " + DBStock.getTable() + " ADD COLUMN " + DBStock.Columns.STOCKIMPORT + " INTEGER DEFAULT 0");
-                        db.setTransactionSuccessful();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }finally {
-                        db.endTransaction();
-                    }
-                    break;
-                }
-			case 3:
-				if(newVersion ==4){
-					db.beginTransaction();
-					try{
-						db.execSQL("ALTER TABLE " + DBMateriel.getTable() + " ADD COLUMN " + DBMateriel.Columns.STARTPAGE + " INTEGER DEFAULT 0");
+						db.execSQL("ALTER TABLE " + DBQuotation.getTable() + " ADD COLUMN " + DBQuotation.Columns.TYPE + " INTEGER DEFAULT 0");
+						db.execSQL("ALTER TABLE " + DBQuotation.getTable() + " ADD COLUMN " + DBQuotation.Columns.TIP + " TEXT");
 						db.setTransactionSuccessful();
 					}catch (Exception e){
 						e.printStackTrace();
@@ -70,12 +45,11 @@ public class DBHelper extends SQLiteOpenHelper {
 					}
 					break;
 				}
-			case 4:
-				if(newVersion ==5){
+			case 5:
+				if(newVersion == 6){
 					db.beginTransaction();
 					try{
-						db.execSQL("ALTER TABLE " + DBQuotation.getTable() + " ADD COLUMN " + DBQuotation.Columns.TYPE + " INTEGER DEFAULT 0");
-						db.execSQL("ALTER TABLE " + DBQuotation.getTable() + " ADD COLUMN " + DBQuotation.Columns.TIP + " TEXT");
+						db.execSQL("ALTER TABLE " + DBQuotation.getTable() + " ADD COLUMN " + DBQuotation.Columns.INDEX + " INTEGER DEFAULT 0");
 						db.setTransactionSuccessful();
 					}catch (Exception e){
 						e.printStackTrace();
