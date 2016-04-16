@@ -39,6 +39,10 @@ public class DBProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
             String[] selectionArgs, String sortOrder) {
         if (mDBHelper != null) {
+            for(String s:projection){
+                System.out.println("========="+s);
+            }
+
             DBContract.ModelInfo modelInfo = DBContract.getModelInfo(uri);
             if (modelInfo != null) {
                 SelectionBuilder builder = modelInfo.model.buildSelection(uri, modelInfo.code);

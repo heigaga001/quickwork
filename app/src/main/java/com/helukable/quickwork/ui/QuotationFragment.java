@@ -106,24 +106,34 @@ public class QuotationFragment extends BaseFragment implements LoaderManager.Loa
                 startActivity(new Intent(getBaseActivity(), QuotationDetailsActivity.class));
                 break;
             case R.id.action_0:
-                where = DBQuotation.getColumn(DBQuotation.Columns.TYPE) +" = ? ";
+                where = DBQuotation.getColumn(DBQuotation.Columns.INDEX) +" = ? ";
                 selectType = 0;
                 getLoaderManager().restartLoader(0,null,this);
+                getBaseActivity().setTitle("意向询价");
                 break;
             case R.id.action_1:
-                where = DBQuotation.getColumn(DBQuotation.Columns.TYPE) +" = ? ";
+                where = DBQuotation.getColumn(DBQuotation.Columns.INDEX) +" = ? ";
                 selectType = 1;
                 getLoaderManager().restartLoader(0,null,this);
+                getBaseActivity().setTitle("报价跟踪");
                 break;
             case R.id.action_2:
-                where = DBQuotation.getColumn(DBQuotation.Columns.TYPE) +" = ? ";
+                where = DBQuotation.getColumn(DBQuotation.Columns.INDEX) +" = ? ";
                 selectType = 2;
                 getLoaderManager().restartLoader(0,null,this);
+                getBaseActivity().setTitle("已转合同");
                 break;
             case R.id.action_3:
-                where = DBQuotation.getColumn(DBQuotation.Columns.TYPE) +" = ? ";
+                where = DBQuotation.getColumn(DBQuotation.Columns.INDEX) +" = ? ";
                 selectType = 3;
                 getLoaderManager().restartLoader(0,null,this);
+                getBaseActivity().setTitle("报价流失");
+                break;
+            case R.id.action_all:
+                where = null;
+                selectType = 0;
+                getLoaderManager().restartLoader(0,null,this);
+                getBaseActivity().setTitle("全部报价");
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -131,7 +141,8 @@ public class QuotationFragment extends BaseFragment implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getBaseActivity(), DBQuotation.getInstance().getUri(DBQuotation.QUOTATION_CUSTOMER_ID, 0), DBQuotation.getColumns(DBQuotation.QUOTATION_CUSTOMER_ID), where,where==null?null:new String[]{String.valueOf(selectType)},  DBQuotation.getColumn(DBQuotation.Columns.CREATEAT)+" desc");
+//        return new CursorLoader(getBaseActivity(), DBQuotation.getInstance().getUri(DBQuotation.QUOTATION_CUSTOMER_ID, 0), DBQuotation.getColumns(DBQuotation.QUOTATION_CUSTOMER_ID), null,null,  null);
+        return new CursorLoader(getBaseActivity(), DBQuotation.getInstance().getUri(DBQuotation.QUOTATION_CUSTOMER_ID, 0), DBQuotation.getColumns(DBQuotation.QUOTATION_CUSTOMER_ID), where,where==null?null:new String[]{String.valueOf(selectType)},  where==null?DBQuotation.getColumn(DBQuotation.Columns.INDEX):DBQuotation.getColumn(DBQuotation.Columns.CREATEAT)+" desc");
     }
 
     @Override
@@ -171,8 +182,8 @@ public class QuotationFragment extends BaseFragment implements LoaderManager.Loa
             sb.append(cursor.getFloat(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.COEFFICIENT))));
             sb.append("\n");
             sb.append("类型：");
-            int type= cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.TYPE)));
-            sb.append(types[type]);
+            int index= cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.INDEX)));
+            sb.append(types[index]);
             sb.append("\n");
             sb.append("公司：");
             sb.append(cursor.getString(cursor.getColumnIndexOrThrow(DBCompany.getColumn(DBCompany.Columns.NAME))));

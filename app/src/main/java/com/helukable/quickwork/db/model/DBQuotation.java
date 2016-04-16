@@ -169,6 +169,7 @@ public class DBQuotation extends DBModel {
         values.put(Columns.NIVALUE, qutation.getNiValue());
         values.put(Columns.TIP, qutation.getTip());
         values.put(Columns.TYPE, qutation.getType());
+        values.put(Columns.INDEX, qutation.getType());
         values.put(Columns.CREATEAT, qutation.getCreateAt() == null ? "" + System.currentTimeMillis() : qutation.getCreateAt());
         if (qutation.getId() != 0) {
             resolver.update(getUri(QUOTATION, 0), values, Columns.ID + " = ? ", new String[]{String.valueOf(qutation.getId())});

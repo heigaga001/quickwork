@@ -21,4 +21,8 @@
         android:title="报价流失"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_all"
+        android:title="全部报价"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

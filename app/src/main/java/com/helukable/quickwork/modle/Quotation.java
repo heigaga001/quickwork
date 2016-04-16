@@ -290,7 +290,7 @@ public class Quotation implements Parcelable {
         quotation.setFax(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.FAX))));
         quotation.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(DBCustomer.getColumn(DBCustomer.Columns.EMAIL))));
         quotation.setTip(cursor.getString(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.TIP))));
-        quotation.setType(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.TYPE))));
+        quotation.setType(cursor.getInt(cursor.getColumnIndexOrThrow(DBQuotation.getColumn(DBQuotation.Columns.INDEX))));
         return quotation;
     }
 }
